@@ -8,7 +8,9 @@ dotenv.config({
 });
 
 const config = {
-    database_url: env.DATABASE_URL as string
+    database_url: env.DATABASE_URL as string,
+    node_env: env.NODE_ENV as string,
+    port: env.PORT as string
 }
 
 export default config
