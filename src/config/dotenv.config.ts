@@ -8,9 +8,15 @@ dotenv.config({
 });
 
 const config = {
-    database_url: env.DATABASE_URL as string,
-    node_env: env.NODE_ENV as string,
-    port: env.PORT as string
-}
+  database_url: env.DATABASE_URL as string,
+  node_env: env.NODE_ENV as string,
+  port: env.PORT as string,
+  app_url: env.APP_URL,
+  bcrypt_salt_rounds: env.BCRYPT_SALT_ROUNDS,
+  jwt_access_secret: env.JWT_ACCESS_SECRET,
+  jwt_refresh_secret: env.JWT_REFRESH_SECRET,
+  jwt_access_expires_in: env.JWT_ACCESS_EXPIRES_IN,
+  jwt_refresh_expires_in: env.JWT_REFRESH_EXPIRES_IN,
+};
 
-export default config
+export default config;
