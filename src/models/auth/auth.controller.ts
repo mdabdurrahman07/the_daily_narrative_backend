@@ -13,7 +13,11 @@ const registerUser = async (req: Request, res: Response) => {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log(error.message);
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "failed to register an user",
+        error: (error as Error).message,
+      });
     } else {
       console.log("unexpected error at register user");
     }
