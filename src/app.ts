@@ -1,17 +1,20 @@
 import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
-import cors from "cors"
+import cors from "cors";
 import config from "./config/dotenv.config";
+import { authRoute } from "./models/auth/auth.route";
 const app: Application = express();
 
 // express middlewares
-app.use(express.json)
-app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
-app.use(cors({
-   origin: config.app_url,
-   credentials: true
-}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: config.app_url,
+    credentials: true,
+  }),
+);
 
 // root
 app.get("/", (req: Request, res: Response) => {
@@ -21,4 +24,9 @@ app.get("/", (req: Request, res: Response) => {
     error: false,
   });
 });
+
+// routing
+
+// ! USERS
+app.use("/api/v1/tdn/auth/users", authRoute);
 export default app;
