@@ -36,8 +36,14 @@ const createUserIntoDB = async (payload: any) => {
       id: createdUser.id,
       email: createdUser.email || email,
     },
+    omit: {
+      password: true,
+    },
+    include: {
+      profile: true,
+    },
   });
-  return user
+  return user;
 };
 
 export const authService = {
