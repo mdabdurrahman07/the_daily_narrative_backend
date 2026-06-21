@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
+import { registerUser } from "./auth.interface";
 
-const createUserIntoDB = async (payload: any) => {
+const createUserIntoDB = async (payload: registerUser) => {
   const { name, email, password, profilePhoto } = payload;
   const isUserExist = await prisma.user.findUnique({
     where: { email },
