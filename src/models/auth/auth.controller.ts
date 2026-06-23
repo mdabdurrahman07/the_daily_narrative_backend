@@ -20,8 +20,13 @@ const registerUser = catchAsync(
 const loginUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
-    const loggedUser = await authService.loginUser(payload);
-    return loggedUser;
+    const loginResult = await authService.loginUser(payload);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User Login Successful",
+      data: loginResult,
+    });
   },
 );
 

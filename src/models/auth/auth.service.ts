@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
-import { registerUser } from "./auth.interface";
+import { ILogin, registerUser } from "./auth.interface";
 
 const createUserIntoDB = async (payload: registerUser) => {
   const { name, email, password, profilePhoto } = payload;
@@ -52,8 +52,18 @@ const createUserIntoDB = async (payload: registerUser) => {
   return user;
 };
 
-const loginUser = async (payload: any) => {
-  return payload;
+const loginUser = async (payload: ILogin) => {
+  const { email, password } = payload;
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { email }
+  });
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatched) {
+    throw new Error("Password is incorrect");
+  }
+  return user;
 };
 
 export const authService = {

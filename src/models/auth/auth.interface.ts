@@ -4,3 +4,8 @@ export interface registerUser {
   password: string;
   profilePhoto: string;
 }
+
+export interface ILogin {
+  email: string;
+  password: string;
+}
