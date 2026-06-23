@@ -13,10 +13,10 @@ const config = {
   port: env.PORT as string,
   app_url: env.APP_URL as string,
   bcrypt_salt_rounds: env.BCRYPT_SALT_ROUNDS as string,
-  jwt_access_secret: env.JWT_ACCESS_SECRET,
-  jwt_refresh_secret: env.JWT_REFRESH_SECRET,
-  jwt_access_expires_in: env.JWT_ACCESS_EXPIRES_IN,
-  jwt_refresh_expires_in: env.JWT_REFRESH_EXPIRES_IN,
+  jwt_access_secret: env.JWT_ACCESS_SECRET! as string,
+  jwt_refresh_secret: env.JWT_REFRESH_SECRET! as string,
+  jwt_access_expires_in: env.JWT_ACCESS_EXPIRES_IN! as string,
+  jwt_refresh_expires_in: env.JWT_REFRESH_EXPIRES_IN! as string,
 };
 
 export default config;

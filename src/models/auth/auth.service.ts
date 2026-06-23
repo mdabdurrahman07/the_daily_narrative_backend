@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
 import { ILogin, registerUser } from "./auth.interface";
+import Jwt, { SignOptions } from "jsonwebtoken";
+import { jwtUtils } from "../../util/jwt";
 
 const createUserIntoDB = async (payload: registerUser) => {
   const { name, email, password, profilePhoto } = payload;
@@ -55,7 +57,7 @@ const createUserIntoDB = async (payload: registerUser) => {
 const loginUser = async (payload: ILogin) => {
   const { email, password } = payload;
   const user = await prisma.user.findUniqueOrThrow({
-    where: { email }
+    where: { email },
   });
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -63,7 +65,30 @@ const loginUser = async (payload: ILogin) => {
   if (!isPasswordMatched) {
     throw new Error("Password is incorrect");
   }
-  return user;
+
+  const jwtPayload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+  // accessToken
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions,
+  );
+  // refreshToken
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions,
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 export const authService = {
