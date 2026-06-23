@@ -2,22 +2,30 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { authService } from "./auth.service";
 import catchAsync from "../../util/catchAsync";
+import { sendResponse } from "../../util/sendResponse";
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
     const user = await authService.createUserIntoDB(payload);
-    res.status(httpStatus.CREATED).json({
+    sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
       message: "User Registered Successfully",
-      data: {
-        user,
-      },
+      data: { user },
     });
+  },
+);
+
+const loginUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body;
+    const loggedUser = await authService.loginUser(payload);
+    return loggedUser;
   },
 );
 
 export const authController = {
   registerUser,
+  loginUser,
 };

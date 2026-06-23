@@ -52,6 +52,11 @@ const createUserIntoDB = async (payload: registerUser) => {
   return user;
 };
 
+const loginUser = async (payload: any) => {
+  return payload;
+};
+
 export const authService = {
   createUserIntoDB,
+  loginUser,
 };
