@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
 import { ILogin, registerUser } from "./auth.interface";
-import Jwt, { SignOptions } from "jsonwebtoken";
+import { SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../util/jwt";
 
 const createUserIntoDB = async (payload: registerUser) => {
