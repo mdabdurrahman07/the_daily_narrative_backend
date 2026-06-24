@@ -62,11 +62,11 @@ const getMyProfile = catchAsync(
   },
 );
 
-const updateUser = () => {}
+const updateMyProfile = () => {}
 
 export const authController = {
   registerUser,
   loginUser,
   getMyProfile,
-  updateUser
+  updateMyProfile
 };
