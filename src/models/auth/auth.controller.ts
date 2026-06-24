@@ -3,9 +3,6 @@ import httpStatus from "http-status";
 import { authService } from "./auth.service";
 import catchAsync from "../../util/catchAsync";
 import { sendResponse } from "../../util/sendResponse";
-import Jwt from "jsonwebtoken";
-import config from "../../config/dotenv.config";
-import { jwtUtils } from "../../util/jwt";
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -52,20 +49,9 @@ const loginUser = catchAsync(
 
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { accessToken } = req.cookies;
+    const userId = req.user?.id;
 
-    // ! verify token
-
-    const verifiedToken = jwtUtils.verifyToken(
-      accessToken,
-      config.jwt_access_secret,
-    );
-
-    if (typeof verifiedToken === "string") {
-      throw new Error(verifiedToken);
-    }
-
-    const profile = await authService.getMyProfileFromDB(verifiedToken?.id);
+    const profile = await authService.getMyProfileFromDB(userId as string);
 
     sendResponse(res, {
       success: true,

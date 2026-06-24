@@ -10,11 +10,11 @@ const catchAsync = (fn: RequestHandler) => {
         res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
           success: false,
           statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-          message: "Failed to Register an User",
-          error: (error as Error).message,
+          message: (error as Error).message,
+          error: true,
         });
       } else {
-        console.log("Unexpected Error at Register User");
+        throw new Error("Unexpected catchAsync func error");
       }
     }
   };

@@ -66,6 +66,10 @@ const loginUser = async (payload: ILogin) => {
     throw new Error("Password is incorrect");
   }
 
+  if (user.activeStatus === "BLOCKED") {
+    throw new Error("Your account has been blocked. Please contact support");
+  }
+
   const jwtPayload = {
     id: user.id,
     name: user.name,
