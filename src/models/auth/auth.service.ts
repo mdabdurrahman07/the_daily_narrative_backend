@@ -110,8 +110,11 @@ const getMyProfileFromDB = async (userId: string) => {
   return userProfile;
 };
 
+const updateUserFromDB = () => {}
+
 export const authService = {
   createUserIntoDB,
   loginUser,
   getMyProfileFromDB,
+  updateUserFromDB
 };
