@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
-import { ILogin, registerUser } from "./auth.interface";
+import { ILogin, IProfileUpdate, registerUser } from "./auth.interface";
 import { SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../util/jwt";
 
@@ -110,11 +110,39 @@ const getMyProfileFromDB = async (userId: string) => {
   return userProfile;
 };
 
-const updateMyProfileFromDB = () => {}
+const updateMyProfileFromDB = async (
+  userId: string,
+  payload: IProfileUpdate,
+) => {
+  const { name, email, profilePhoto, bio } = payload;
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name,
+      email,
+      profile: {
+        update: {
+          profilePhoto,
+          bio,
+        },
+      },
+    },
+    omit: {
+      password: true,
+    },
+    include: {
+      profile: true,
+    },
+  });
+  return updatedUser;
+};
 
 export const authService = {
   createUserIntoDB,
   loginUser,
   getMyProfileFromDB,
-  updateMyProfileFromDB
+  updateMyProfileFromDB,
 };

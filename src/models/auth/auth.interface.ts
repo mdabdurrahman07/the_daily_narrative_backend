@@ -9,3 +9,10 @@ export interface ILogin {
   email: string;
   password: string;
 }
+
+export interface IProfileUpdate {
+  name?: string;
+  email?: string;
+  profilePhoto?: string;
+  bio?: string;
+}
