@@ -8,17 +8,8 @@ model User {
     profile      Profile?
     createdAt    DateTime     @default(now())
     updatedAt    DateTime     @updatedAt
+    comments     Comment[]
+    posts        Post[]
 
     @@map("users")
-}
-
-enum activeStatus {
-    ACTIVE
-    BLOCKED
-}
-
-enum Role {
-    AUTHOR
-    USER
-    ADMIN
 }
