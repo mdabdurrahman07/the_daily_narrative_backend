@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import config from "./config/dotenv.config";
 import { authRoute } from "./models/auth/auth.route";
+import { postRoute } from "./models/post/post.route";
 const app: Application = express();
 
 // express middlewares
@@ -29,4 +30,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // ! USERS
 app.use("/api/v1/tdn/auth/users", authRoute);
+
+// ! POSTS
+app.use("/api/v1/tdn/posts", postRoute);
 export default app;

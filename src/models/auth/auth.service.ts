@@ -173,7 +173,7 @@ const refreshUserToken = async (rfToken: string) => {
     config.jwt_access_expires_in as SignOptions,
   );
 
-  return {accessToken}
+  return { accessToken };
 };
 
 export const authService = {

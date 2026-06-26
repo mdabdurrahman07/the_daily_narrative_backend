@@ -88,7 +88,7 @@ const refreshToken = catchAsync(
       refreshToken as string,
     );
 
-     // ! accessToken - cookies
+    // ! accessToken - cookies
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: false,
@@ -100,7 +100,7 @@ const refreshToken = catchAsync(
       success: true,
       statusCode: httpStatus.OK,
       message: "Token refreshed successfully",
-      data: {accessToken},
+      data: { accessToken },
     });
   },
 );
