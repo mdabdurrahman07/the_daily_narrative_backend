@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config/dotenv.config";
 import { ILogin, IProfileUpdate, registerUser } from "./auth.interface";
-import { SignOptions } from "jsonwebtoken";
+import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../util/jwt";
 
 const createUserIntoDB = async (payload: registerUser) => {
@@ -140,9 +140,46 @@ const updateMyProfileFromDB = async (
   return updatedUser;
 };
 
+const refreshUserToken = async (rfToken: string) => {
+  const verifyRefreshToken = jwtUtils.verifyToken(
+    rfToken,
+    config.jwt_refresh_secret,
+  );
+
+  if (!verifyRefreshToken?.success) {
+    throw new Error(verifyRefreshToken?.error);
+  }
+
+  const { id } = verifyRefreshToken.data as JwtPayload;
+
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id },
+  });
+
+  if (user.activeStatus === "BLOCKED") {
+    throw new Error("User is blocked");
+  }
+
+  const jwtPayload = {
+    id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions,
+  );
+
+  return {accessToken}
+};
+
 export const authService = {
   createUserIntoDB,
   loginUser,
   getMyProfileFromDB,
   updateMyProfileFromDB,
+  refreshUserToken,
 };

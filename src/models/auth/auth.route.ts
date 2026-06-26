@@ -9,5 +9,6 @@ router.post("/register", authController.registerUser);
 router.post("/login", authController.loginUser);
 router.get("/me", authMiddleware(Role.USER, Role.ADMIN, Role.AUTHOR) , authController.getMyProfile)
 router.put("/my-profile", authMiddleware(Role.USER, Role.ADMIN, Role.AUTHOR), authController.updateMyProfile)
+router.post("/refresh-token", authController.refreshToken)
 
 export const authRoute = router;
