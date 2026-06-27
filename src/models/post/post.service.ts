@@ -1,3 +1,4 @@
+import { CommentStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { ICreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
@@ -27,12 +28,7 @@ const fetchAllPostsFromDB = async () => {
 };
 
 const fetchSinglePostFromDB = async (postId: string) => {
-  const result = await prisma.post.findUniqueOrThrow({
-    where: {
-      id: postId,
-    },
-  });
-  const updatePost = await prisma.post.update({
+  await prisma.post.update({
     where: {
       id: postId,
     },
@@ -41,16 +37,36 @@ const fetchSinglePostFromDB = async (postId: string) => {
         increment: 1,
       },
     },
+  });
+
+  const post = await prisma.post.findUniqueOrThrow({
+    where: {
+      id: postId,
+    },
     include: {
       author: {
         omit: {
           password: true,
         },
       },
-      comments: true,
+      comments: {
+        where: {
+          status: CommentStatus.APPROVED,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
     },
   });
-  return updatePost;
+
+  return post;
 };
 
 const fetchMyPostFromDB = async (authorId: string) => {
@@ -125,8 +141,8 @@ const deletePostFromDB = async (
   if (!isAdmin && post.authorId !== authorId) {
     throw new Error("You're not the owner of this post");
   }
-  // ! no need a result and return here 
-    await prisma.post.delete({
+  // ! no need a result and return here
+  await prisma.post.delete({
     where: {
       id: postId,
     },
@@ -139,5 +155,5 @@ export const postService = {
   fetchSinglePostFromDB,
   fetchMyPostFromDB,
   updatePostIntoDB,
-  deletePostFromDB
+  deletePostFromDB,
 };
