@@ -225,6 +225,14 @@ const fetchPostsStats = async () => {
       },
     });
 
+    const totalPostViewsAgrt = await tx.post.aggregate({
+      _sum: {
+        views: true,
+      },
+    });
+
+    const totalPostViews = totalPostViewsAgrt._sum.views
+
     return {
       totalPost,
       totalPublishedPosts,
@@ -233,6 +241,7 @@ const fetchPostsStats = async () => {
       totalComments,
       totalApprovedComments,
       totalRejectComments,
+      totalPostViews
     };
   });
   return transactionResult;
@@ -245,5 +254,5 @@ export const postService = {
   fetchMyPostFromDB,
   updatePostIntoDB,
   deletePostFromDB,
-  fetchPostsStats
+  fetchPostsStats,
 };
