@@ -16,7 +16,18 @@ const getAllPosts = catchAsync(
   },
 );
 const getPostsStats = () => {};
-const getMyPosts = () => {};
+const getMyPosts = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const authorId = req.user?.id as string;
+    const result = await postService.fetchMyPostFromDB(authorId);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "My pots retrieved successfully",
+      data: result,
+    });
+  },
+);
 const getSinglePost = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const postId = req.params.postId as string;
