@@ -1,4 +1,4 @@
-import { CommentStatus } from "../../../generated/prisma/enums";
+import { CommentStatus, PostStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { ICreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
@@ -192,6 +192,52 @@ const deletePostFromDB = async (
   });
 };
 
+const fetchPostsStats = async () => {
+  const transactionResult = await prisma.$transaction(async (tx) => {
+    const totalPost = await tx.post.count();
+
+    const totalPublishedPosts = await tx.post.count({
+      where: {
+        status: PostStatus.PUBLISHED,
+      },
+    });
+    const totalDraftPosts = await tx.post.count({
+      where: {
+        status: PostStatus.DRAFT,
+      },
+    });
+    const totalArchivePosts = await tx.post.count({
+      where: {
+        status: PostStatus.ARCHIVE,
+      },
+    });
+
+    const totalComments = await tx.comment.count();
+
+    const totalApprovedComments = await tx.comment.count({
+      where: {
+        status: CommentStatus.APPROVED,
+      },
+    });
+    const totalRejectComments = await tx.comment.count({
+      where: {
+        status: CommentStatus.REJECT,
+      },
+    });
+
+    return {
+      totalPost,
+      totalPublishedPosts,
+      totalDraftPosts,
+      totalArchivePosts,
+      totalComments,
+      totalApprovedComments,
+      totalRejectComments,
+    };
+  });
+  return transactionResult;
+};
+
 export const postService = {
   createPostInDB,
   fetchAllPostsFromDB,
@@ -199,4 +245,5 @@ export const postService = {
   fetchMyPostFromDB,
   updatePostIntoDB,
   deletePostFromDB,
+  fetchPostsStats
 };
