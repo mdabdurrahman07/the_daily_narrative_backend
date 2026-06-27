@@ -17,7 +17,22 @@ const getAllPosts = catchAsync(
 );
 const getPostsStats = () => {};
 const getMyPosts = () => {};
-const getSinglePost = () => {};
+const getSinglePost = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const postId = req.params.postId as string;
+    if (!postId) {
+      throw new Error("Post id is required");
+    }
+
+    const result = await postService.fetchSinglePostFromDB(postId);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Post retrieved successfully",
+      data: result,
+    });
+  },
+);
 const addPost = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.user?.id as string;
