@@ -97,6 +97,8 @@ const moderateComment = catchAsync( async (req: Request, res: Response, next: Ne
     message:"Comment updated by an admin",
     data: {}
   })
+  
+  return result
 
 })
 
@@ -106,4 +108,5 @@ export const commentController = {
   addComment,
   updateComment,
   deleteComment,
+  moderateComment
 };

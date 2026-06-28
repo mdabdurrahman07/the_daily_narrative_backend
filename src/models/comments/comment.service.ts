@@ -22,6 +22,7 @@ const getAuthorCommentFromDB = async (authorId: string) => {
       createdAt: "desc",
     },
   });
+
   return result;
 };
 
