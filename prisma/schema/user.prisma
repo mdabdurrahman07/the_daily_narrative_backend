@@ -1,15 +1,15 @@
 model User {
-    id           String       @id @default(uuid())
-    name         String       @db.VarChar(255)
-    email        String       @unique
-    password     String
-    activeStatus activeStatus @default(ACTIVE)
-    role         Role         @default(USER)
-    profile      Profile?
-    createdAt    DateTime     @default(now())
-    updatedAt    DateTime     @updatedAt
-    comments     Comment[]
-    posts        Post[]
+  id           String       @id @default(uuid())
+  name         String       @db.VarChar(255)
+  email        String       @unique
+  password     String
+  activeStatus activeStatus @default(ACTIVE)
+  role         Role         @default(USER)
+  profile      Profile?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  comments     Comment[]
+  posts        Post[]
 
-    @@map("users")
+  @@map("users")
 }
