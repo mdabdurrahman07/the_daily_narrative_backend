@@ -6,8 +6,10 @@ import { commentService } from "./comment.service";
 
 const fetchAuthorComment = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const {authorId} = req.params
-    const result = await commentService.getAuthorCommentFromDB(authorId as string);
+    const { authorId } = req.params;
+    const result = await commentService.getAuthorCommentFromDB(
+      authorId as string,
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
@@ -33,7 +35,7 @@ const fetchSingleComment = catchAsync(
 const addComment = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const payload = req.body;
-    const authorId = req.user?.id as string
+    const authorId = req.user?.id as string;
     const result = await commentService.createCommentIntoDB(payload, authorId);
 
     sendResponse(res, {
@@ -45,8 +47,31 @@ const addComment = catchAsync(
   },
 );
 
+const updateComment = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    const { commentId } = req.params;
+    const authorId = user?.id as string;
+    const payload = req.body;
+
+    const result = await commentService.updateCommentIntoDB(
+      commentId as string,
+      payload,
+      authorId,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comment updated successfully",
+      data: result,
+    });
+  },
+);
+
 export const commentController = {
   fetchAuthorComment,
   fetchSingleComment,
   addComment,
+  updateComment,
 };

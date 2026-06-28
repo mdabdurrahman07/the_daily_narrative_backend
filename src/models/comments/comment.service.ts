@@ -1,6 +1,6 @@
 import { PassThrough } from "node:stream";
 import { prisma } from "../../lib/prisma";
-import { ICommentPayload } from "./comment.interface";
+import { ICommentPayload, ICommentUpdatePayload } from "./comment.interface";
 
 const getAuthorCommentFromDB = async (authorId: string) => {
   const result = await prisma.comment.findMany({
@@ -65,8 +65,35 @@ const createCommentIntoDB = async (
   return result;
 };
 
+const updateCommentIntoDB = async (
+  commentId: string,
+  payload: ICommentUpdatePayload,
+  authorId: string,
+) => {
+  await prisma.comment.findUniqueOrThrow({
+    where: {
+      id: commentId,
+      authorId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const result = await prisma.comment.update({
+    where: {
+      id: commentId,
+      authorId,
+    },
+    data: payload,
+  });
+
+  return result;
+};
+
 export const commentService = {
   getAuthorCommentFromDB,
   getSingleComment,
   createCommentIntoDB,
+  updateCommentIntoDB,
 };
