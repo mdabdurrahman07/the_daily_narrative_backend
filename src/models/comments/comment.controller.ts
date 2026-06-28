@@ -83,6 +83,23 @@ const deleteComment = catchAsync(
   },
 );
 
+const moderateComment = catchAsync( async (req: Request, res: Response, next: NextFunction) => {
+
+  const { commentId } = req.params;
+  
+  const payload = req.body
+
+  const result = await commentService.updateModerateComment(commentId as string, payload)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message:"Comment updated by an admin",
+    data: {}
+  })
+
+})
+
 export const commentController = {
   fetchAuthorComment,
   fetchSingleComment,
