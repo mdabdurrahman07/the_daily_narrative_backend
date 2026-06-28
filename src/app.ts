@@ -4,6 +4,8 @@ import cors from "cors";
 import config from "./config/dotenv.config";
 import { authRoute } from "./models/auth/auth.route";
 import { postRoute } from "./models/post/post.route";
+import { commentRoute } from "./models/comments/comment.route";
+
 const app: Application = express();
 
 // express middlewares
@@ -33,4 +35,7 @@ app.use("/api/v1/tdn/auth/users", authRoute);
 
 // ! POSTS
 app.use("/api/v1/tdn/posts", postRoute);
+
+// ! COMMENTS
+app.use("/api/v1/tdn/comments", commentRoute);
 export default app;
