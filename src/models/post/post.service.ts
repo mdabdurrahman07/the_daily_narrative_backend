@@ -1,6 +1,10 @@
 import { CommentStatus, PostStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { ICreatePostPayload, IUpdatePostPayload } from "./post.interface";
+import {
+  ICreatePostPayload,
+  IPostQuery,
+  IUpdatePostPayload,
+} from "./post.interface";
 
 const createPostInDB = async (payload: ICreatePostPayload, userId: string) => {
   const result = await prisma.post.create({
@@ -12,8 +16,48 @@ const createPostInDB = async (payload: ICreatePostPayload, userId: string) => {
   return result;
 };
 
-const fetchAllPostsFromDB = async () => {
+const fetchAllPostsFromDB = async (query: IPostQuery) => {
+  console.log(query);
   const result = await prisma.post.findMany({
+    // pagination with limit or take and skip or page
+    // take: 2, //limit
+    // skip: (2-1)*2, //page
+    // formula of skip
+    //! skip(page -1) * limit
+
+    // query
+    where: {
+      AND: [
+        // search terms
+
+        query.searchTerm
+          ? {
+              OR: [
+                {
+                  title: {
+                    contains: query.searchTerm,
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  content: {
+                    contains: query.searchTerm,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            }
+          : {},
+
+        // title filtering
+        query.title ? { title: query.title } : {},
+
+        // content filtering
+
+        query.content ? { content: query.content } : {},
+      ],
+    },
+
     include: {
       author: {
         omit: {
@@ -299,8 +343,8 @@ const fetchPostsStats = async () => {
       totalComments,
       totalApprovedComments,
       totalRejectComments,
-      totalPostViews : totalPostViewsAggregate._sum.views
-    }
+      totalPostViews: totalPostViewsAggregate._sum.views,
+    };
   });
   return transactionResult;
 };
