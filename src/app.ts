@@ -1,10 +1,12 @@
 import cookieParser from "cookie-parser";
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import config from "./config/dotenv.config";
 import { authRoute } from "./models/auth/auth.route";
 import { postRoute } from "./models/post/post.route";
 import { commentRoute } from "./models/comments/comment.route";
+import { notFound } from "./middleware/notFound.middleware";
+import { globalErrorHandler } from "./middleware/globalErrorHandler";
 
 const app: Application = express();
 
@@ -39,3 +41,9 @@ app.use("/api/v1/tdn/posts", postRoute);
 // ! COMMENTS
 app.use("/api/v1/tdn/comments", commentRoute);
 export default app;
+
+// ! wrong route error
+app.use(notFound);
+
+// ! Global Error
+app.use(globalErrorHandler);
