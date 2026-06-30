@@ -7,6 +7,7 @@ import { postRoute } from "./models/post/post.route";
 import { commentRoute } from "./models/comments/comment.route";
 import { notFound } from "./middleware/notFound.middleware";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { subsRoute } from "./models/subscription/subscription.route";
 
 const app: Application = express();
 
@@ -40,10 +41,14 @@ app.use("/api/v1/tdn/posts", postRoute);
 
 // ! COMMENTS
 app.use("/api/v1/tdn/comments", commentRoute);
-export default app;
+
+// ! Stripe Subscription
+app.use("/api/v1/tdn/subscription", subsRoute);
 
 // ! wrong route error
 app.use(notFound);
 
 // ! Global Error
 app.use(globalErrorHandler);
+
+export default app;
