@@ -19,6 +19,7 @@ const config = {
   jwt_refresh_expires_in: env.JWT_REFRESH_EXPIRES_IN! as string,
   stripe_secret_key: env.STRIPE_SECRET_KEY! as string,
   stripe_price_id: env.STRIPE_PRICE_ID! as string,
+  stripe_webhook_secret: env.STRIPE_WEBHOOK_SECRET_KEY! as string
 };
 
 export default config;

@@ -11,6 +11,13 @@ import { subsRoute } from "./models/subscription/subscription.route";
 
 const app: Application = express();
 
+
+// stripe webhook
+
+app.post("/api/v1/tdn/subscription/webhook", express.raw({type: 'application/json'}) , () => {
+  
+})
+
 // express middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
