@@ -12,4 +12,6 @@ router.post(
   subsController.createCheckoutSession,
 );
 
+router.post("/webhook", subsController.handleWebHook)
+
 export const subsRoute = router;
