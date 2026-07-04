@@ -1,5 +1,4 @@
 import { PostWhereInput } from "./../../../generated/prisma/models/Post";
-import { commentService } from "./../comments/comment.service";
 import { CommentStatus, PostStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import {
@@ -89,7 +88,9 @@ const fetchAllPostsFromDB = async (query: IPostQuery) => {
       status: query.status,
     });
   }
-
+  andConditions.push({
+    isPremium: false,
+  });
   const result = await prisma.post.findMany({
     // pagination with limit or take and skip or page
     // take: 2, //limit
@@ -213,6 +214,7 @@ const fetchSinglePostFromDB = async (postId: string) => {
     const post = await tx.post.findUniqueOrThrow({
       where: {
         id: postId,
+        isPremium: false,
       },
       include: {
         author: {
