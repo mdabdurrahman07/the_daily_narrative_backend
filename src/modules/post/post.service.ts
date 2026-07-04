@@ -8,6 +8,18 @@ import {
 } from "./post.interface";
 
 const createPostInDB = async (payload: ICreatePostPayload, userId: string) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    include: {
+      subscription: true,
+    },
+  });
+  // premium user post check
+  if (payload.isPremium && user.subscription?.status !== "ACTIVE") {
+    throw new Error("You're not premium user so you can't create premium post");
+  }
   const result = await prisma.post.create({
     data: {
       ...payload,
@@ -155,7 +167,21 @@ const fetchAllPostsFromDB = async (query: IPostQuery) => {
     },
   });
 
-  return result;
+  const totalPostCount = await prisma.post.count({
+    where: {
+      AND: andConditions,
+    },
+  });
+
+  return {
+    data: result,
+    meta: {
+      page: page,
+      limit: limit,
+      total: totalPostCount,
+      totalPages: Math.ceil(totalPostCount / limit),
+    },
+  };
 };
 
 const fetchSinglePostFromDB = async (postId: string) => {
