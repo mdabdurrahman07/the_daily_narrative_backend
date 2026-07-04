@@ -19,14 +19,14 @@ const fetchAuthorComment = catchAsync(
   },
 );
 
-const fetchSingleComment = catchAsync(
+const fetchCommentByPostId = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const commentId = req.params.commentId as string;
-    const result = await commentService.getSingleComment(commentId);
+    const postId = req.params.postId as string;
+    const result = await commentService.getCommentByPostId(postId);
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
-      message: "Single comment retrieved successfully",
+      message: "Comment by postId retrieved successfully",
       data: result,
     });
   },
@@ -83,30 +83,33 @@ const deleteComment = catchAsync(
   },
 );
 
-const moderateComment = catchAsync( async (req: Request, res: Response, next: NextFunction) => {
+const moderateComment = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { commentId } = req.params;
 
-  const { commentId } = req.params;
-  
-  const payload = req.body
+    const payload = req.body;
 
-  const result = await commentService.updateModerateComment(commentId as string, payload)
+    const result = await commentService.updateModerateComment(
+      commentId as string,
+      payload,
+    );
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message:"Comment updated by an admin",
-    data: {}
-  })
-  
-  return result
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Comment updated by an admin",
+      data: {},
+    });
 
-})
+    return result;
+  },
+);
 
 export const commentController = {
   fetchAuthorComment,
-  fetchSingleComment,
+  fetchCommentByPostId,
   addComment,
   updateComment,
   deleteComment,
-  moderateComment
+  moderateComment,
 };
