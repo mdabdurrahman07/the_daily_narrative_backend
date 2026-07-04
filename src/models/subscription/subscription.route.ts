@@ -12,6 +12,12 @@ router.post(
   subsController.createCheckoutSession,
 );
 
-router.post("/webhook", subsController.handleWebHook)
+router.post("/webhook", subsController.handleWebHook);
+
+router.get(
+  "/status",
+  authMiddleware(Role.ADMIN, Role.AUTHOR, Role.USER),
+  subsController.getSubsStatus,
+);
 
 export const subsRoute = router;
