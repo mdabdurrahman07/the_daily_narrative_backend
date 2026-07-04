@@ -1,6 +1,7 @@
 import config from "../../config/dotenv.config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
+import { handleCheckoutSession } from "./subscription.handler";
 
 const createCheckoutSessionService = async (userId: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
@@ -60,44 +61,8 @@ const handleWebHookService = async (payload: Buffer, signature: string) => {
   switch (event.type) {
     case "checkout.session.completed":
       // Occurs when a Checkout Session has been successfully completed.
-      // console.log("event", event.data.object);
-      const session = event.data.object;
-      const userId = session.metadata?.userId;
-      const stripeCustomerId = session.customer as string;
-      const stripeSubscriptionId = session.subscription as string;
 
-      if (!userId || !stripeCustomerId || !stripeSubscriptionId) {
-        throw new Error("Webhook Failed");
-      }
-
-      const stripeSubscription =
-        await stripe.subscriptions.retrieve(stripeSubscriptionId);
-      // console.log("sub-info", stripeSubscription.items.data[0]);
-      const currentPeriodEndInMilliSec =
-        await stripeSubscription.items.data[0]?.current_period_end!;
-
-      const currentPeriodEnd = new Date(currentPeriodEndInMilliSec * 1000);
-
-      // updating or inserting prisma subscription model
-
-      await prisma.subscription.upsert({
-        where: {
-          userId,
-        },
-        create: {
-          userId,
-          stripeCustomerId,
-          stripeSubscriptionId,
-          status: "ACTIVE",
-          currentPeriodEnd,
-        },
-        update: {
-          stripeCustomerId,
-          stripeSubscriptionId,
-          status: "ACTIVE",
-          currentPeriodEnd,
-        },
-      });
+      await handleCheckoutSession(event.data.object);
 
       break;
     case "customer.subscription.updated":
