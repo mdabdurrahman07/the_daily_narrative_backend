@@ -1,6 +1,4 @@
 import Jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { sendResponse } from "./sendResponse";
-import httpStatus from "http-status";
 
 const createToken = (
   payload: JwtPayload,
