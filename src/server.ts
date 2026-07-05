@@ -2,7 +2,9 @@ import app from "./app";
 import config from "./config/dotenv.config";
 import { prisma } from "./lib/prisma";
 
-if (config.node_env !== "production") {
+const isVercelRuntime = process.env.VERCEL === "1";
+
+if (config.node_env !== "production" || !isVercelRuntime) {
   async function main() {
     const port = config.port;
     try {
@@ -19,3 +21,5 @@ if (config.node_env !== "production") {
   }
   main();
 }
+
+export { app };

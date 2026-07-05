@@ -14,14 +14,16 @@
   "main": "server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc --noEmit && tsup",
     "start": "node dist/server.js",
     "stripe:webhook": "stripe listen --forward-to localhost:8000/api/v1/tdn/subscription/webhook"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
     "@types/pg": "^8.20.0",
+    "@vercel/node": "^5.0.0",
     "prisma": "^7.8.0",
+    "tsup": "^8.4.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   },
@@ -40,6 +42,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.22.0",
+    "serverless-http": "^3.0.0",
     "stripe": "^22.3.0"
   }
 }
