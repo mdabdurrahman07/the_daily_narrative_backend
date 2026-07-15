@@ -1,12 +1,13 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ["src/server.ts", "api/index.ts"],
-  outDir: "dist",
-  format: ["esm"],
-  target: "node18",
-  platform: "node",
-  clean: true,
-  shims: true,
+  entry: ['src/server.ts'],
+  format: ['esm'],
+  target: 'es2023',
+  outDir: 'dist',
+  splitting: false,
   sourcemap: true,
+  clean: true,
+  skipNodeModulesBundle: true, 
+  noExternal: [] 
 });
