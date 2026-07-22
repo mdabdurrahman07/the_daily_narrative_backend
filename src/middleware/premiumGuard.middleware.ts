@@ -8,7 +8,7 @@ export const subscriptionGuard = () => {
     const userId = req.user?.id as string;
     const subscription = await prisma.subscription.findUnique({
       where: {
-        id: userId,
+        userId
       },
     });
     if (!subscription) {
