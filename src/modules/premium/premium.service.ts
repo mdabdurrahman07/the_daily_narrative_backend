@@ -93,6 +93,11 @@ const getPremiumContentFromDB = async (query: IPostQuery) => {
         },
       },
       comments: true,
+            _count:{
+                select:{
+                    comments: true
+                }
+            }
     },
   });
 
