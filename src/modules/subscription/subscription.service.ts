@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import config from "../../config/dotenv.config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
@@ -53,6 +54,10 @@ const createCheckoutSessionService = async (userId: string) => {
 };
 
 const handleWebHookService = async (payload: Buffer, signature: string) => {
+  console.log("================================");
+console.log("Webhook received");
+console.log(signature);
+console.log(payload)
   const endpointSecret = config.stripe_webhook_secret;
 
   const event = stripe.webhooks.constructEvent(
@@ -83,11 +88,14 @@ const handleWebHookService = async (payload: Buffer, signature: string) => {
 };
 
 const getSubscriptionStatus = async (userId: string) => {
-  const isSubscriptionExist = await prisma.subscription.findUniqueOrThrow({
+  const isSubscriptionExist = await prisma.subscription.findUnique({
     where: {
-      userId,
+      userId
     },
   });
+  if(!isSubscriptionExist){
+    throw new Error("No Subscription Found")
+  }
   const isActive =
     isSubscriptionExist.status === "ACTIVE" &&
     isSubscriptionExist.currentPeriodEnd &&
